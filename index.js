@@ -3,6 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+const PORT = process.env.PORT || 3000;
 
 // STATE
 
@@ -38,17 +39,17 @@ io.on('connection', socket => {
         else {
             io.emit('guess', { user: users[socket.id], guess: data, judgement: (data < num) ? 'too low' : 'too high' });
         }
-    })
+    });
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');
         delete users[socket.id];
         io.emit('count', Object.keys(users).length);
-    })
-})
+    });
+});
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(PORT, () => {
+    console.log(`listening on port ${PORT}`);
 });
 
 // LOGIC
