@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+<script>
+    const socket = io();
+</script>
+<body>
+    <h1>Number Guess</h1>
+    <div class="content">
+        <div class="main">
+            <p>I'm thinking of a number between <span class="range" id="low">1</span> and <span class="range" id="high">100</span>.</p>
+        <div class="fade"></div>
+        <div class="container" id="container">
+            <div class="top"></div>
+        </div>
+        <form id="guess">
+            <input class="guessbox" name="guess" type="number" placeholder="guess..."></input>
+            <input type="submit" style="display:none" />
+        </form>
+        </div>
+        <div class="sidebar">
+            <div class="infobox">
+                <p>Playing as <strong><span id="username"></span></strong></p>
+                <p><strong><span id="count"></span></strong> users connected</p>
+            </div>
+        </div>
+    </div>   
+</body>
+<script>
+    const form = document.getElementById('guess');
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        if (!form.elements[0].value) return; 
+        socket.emit('guess', form.elements[0].value);
+        form.elements[0].value='';
+    });
+
+    let name;
+
+    function addMessage(data, color='blue') {
+        const message = document.createElement('div');
+        message.classList.add('message');
+        message.classList.add(color);
+        for (const field in data) {
+            const child = document.createElement('div');
+            child.classList.add(field);
+            child.innerHTML = data[field];
+            message.appendChild(child);
+        }
+        const container = document.getElementById('container')
+        container.appendChild(message);
+        message.scrollIntoView({behavior: "smooth"});
+    }
+
+    socket.on('init', data => {
+        document.getElementById('low').innerHTML = data.low;
+        document.getElementById('high').innerHTML = data.high;
+        console.log(data.name);
+        name = data.name;
+        document.getElementById('username').innerHTML = name;
+
+
+    })
+
+    socket.on('range', data => {
+        console.log('range');
+        document.getElementById('low').innerHTML = data.low;
+        document.getElementById('high').innerHTML = data.high;
+    });
+
+    socket.on('guess', data => {
+        console.log(data);
+        // addMessage(`${data.user}: ${data.guess}`);
+        // addMessage('warmer', true);
+        addMessage({
+            user: `${data.user}:`,
+            number: data.guess,
+            judgement: data.judgement
+        }, data.user === name ? 'dark' : 'blue');
+    });
+
+    socket.on('correct', data => {
+        console.log(data);
+        addMessage({
+            user: `${data.user}:`,
+            number: data.num,
+            judgement: 'CORRECT'
+        }, 'green');
+    });
+
+    socket.on('count', count => {
+        document.getElementById('count').innerHTML = count;
+    })
+</script>
+</html>

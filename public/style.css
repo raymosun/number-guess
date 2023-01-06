@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo&display=swap');
+
+body {
+    font-family: 'Heebo', sans-serif;
+    position: relative;
+}
+
+.content {
+    width: 90vw;
+    display: flex;
+    margin: auto;
+}
+
+
+.main {
+    margin-left: 300px;
+    width: 500;
+    flex-grow: 1;
+    position: relative;
+
+}
+
+.sidebar {
+    width: 300px;
+}
+
+.infobox {
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    border-style: solid;
+    border-color: #8bf;
+
+}
+
+/* .content-width {
+    max-width: 60rem;
+    width: calc(100% - 4rem);
+    margin: 0 auto; 
+} */
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    color: #777;
+}
+
+.top {
+    background-color: yellow;
+    margin-top: auto;
+}
+
+.fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 5%;
+    background-image: linear-gradient(#fff, rgba(255, 255, 255, 0))
+}
+
+.container {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: visible;
+    padding: 1rem 0;
+}
+
+.msg {
+    border-radius: 0.25rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    width: 400px;
+}
+
+.right {
+    margin-left: auto;
+    background-color: rgb(228, 244, 255);
+}
+
+.left {
+    margin-right: auto;
+    background-color: rgb(206, 255, 217);
+}
+
+.guessbox {
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #8bf;
+    text-align: center;
+    padding: 1rem;
+    margin: auto;
+    width: 100%;
+}
+
+form {
+    display: flex;
+}
+
+.range {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.message {
+    display: flex;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin: 0.5rem 1.5rem;
+    animation-name: swell;
+    animation-duration: 0.125s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: 2;
+    animation-direction: alternate;
+}
+
+.blue {
+    background-color: rgb(210, 243, 255);
+}
+
+.dark {
+    background-color: rgb(145, 222, 250);
+}
+
+.green {
+    background-color: rgb(145, 250, 145);
+}
+
+.user {
+    width: 180px;
+    margin-right: 10px;
+}
+
+.number {
+    font-size: 50px;
+    font-weight: bold;
+    width: 110px;
+    text-align: right;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.judgement {
+    margin: auto;
+    font-size: 40px;
+}
+
+@keyframes swell {
+    from    { transform: scale(1); }
+    to      { transform: scale(1.06); }
+}
