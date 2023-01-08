@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
 const http = require('http');
+const { send } = require('process');
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 const PORT = process.env.PORT || 3000;
 
 // STATE
@@ -20,31 +22,40 @@ app.use(express.static(__dirname + '/public'));
 io.on('connection', socket => {
     console.log('A user connected ' + socket.id);
 
-    users[socket.id] = uniqueNamesGenerator(nameConfig);
-    io.emit('count', Object.keys(users).length);
+    users[socket.id] = {
+        name: uniqueNamesGenerator(nameConfig),
+        score: 0,
+    };
+    sendLeaderboard();
 
     socket.emit('init', {
        low: low,
        high: high,
-       name: users[socket.id]
+       name: users[socket.id].name,
     });
 
     socket.on('guess', (data) => {
         console.log(data);
         if (data == num) {
             console.log('correct');
-            io.emit('correct', { user: users[socket.id], num: num });
+            io.emit('correct', { user: users[socket.id].name, num: num });
+            users[socket.id].score++;
+            sendLeaderboard();
             refreshNum();
         }
         else {
-            io.emit('guess', { user: users[socket.id], guess: data, judgement: (data < num) ? 'too low' : 'too high' });
+            io.emit('guess', {
+                user: users[socket.id].name,
+                guess: data, judgement: (data < num) ? 'too low' : 'too high'
+            });
         }
     });
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');
         delete users[socket.id];
-        io.emit('count', Object.keys(users).length);
+        // io.emit('count', Object.keys(users).length);
+        sendLeaderboard();
     });
 });
 
@@ -69,12 +80,14 @@ function refreshNum() {
     io.emit('range', { low: low, high: high });
 }
 
+function sendLeaderboard() {
+    io.emit('leaderboard', Object.values(users).sort( (a, b) => a.score < b.score ? 1 : -1 ) )
+}
+
 // random integer between low (inclusive) and high (exclusive)
 function randBetween(low, high) {
     return Math.floor(Math.random() * (high-low)) + low;
 }
-
-const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
 const nameConfig = {
     dictionaries: [ [...adjectives, ...colors], animals],

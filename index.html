@@ -14,6 +14,7 @@
 <body>
     <h1>Number Guess</h1>
     <div class="content">
+        <div class="side-spacing"></div>
         <div class="main">
             <p>I'm thinking of a number between <span class="range" id="low">1</span> and <span class="range" id="high">100</span>.</p>
         <div class="fade"></div>
@@ -25,10 +26,17 @@
             <input type="submit" style="display:none" />
         </form>
         </div>
-        <div class="sidebar">
+        <div class="side-spacing">
             <div class="infobox">
                 <p>Playing as <strong><span id="username"></span></strong></p>
                 <p><strong><span id="count"></span></strong> users connected</p>
+                <table id="leaderboard">
+                    <tr>
+                        <th>Player</th>
+                        <th>Score</th>
+                    </tr>
+                    
+                </table>
             </div>
         </div>
     </div>   
@@ -95,8 +103,15 @@
         }, 'green');
     });
 
-    socket.on('count', count => {
-        document.getElementById('count').innerHTML = count;
+    socket.on('leaderboard', data => {
+        document.getElementById('count').innerHTML = data.length;
+        const leaderboard = document.getElementById('leaderboard');
+        leaderboard.innerHTML = '<tr><th>Player</th><th>Score</th></tr>';
+        data.forEach( user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td class='name'>${user.name}</td><td class='score'>${user.score}</td>`;
+            leaderboard.appendChild(row);
+        });
     })
 </script>
 </html>

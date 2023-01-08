@@ -13,14 +13,15 @@ body {
 
 
 .main {
-    margin-left: 300px;
-    width: 500;
-    flex-grow: 1;
+    width: 60vw;
     position: relative;
-
 }
 
-.sidebar {
+/* .sidebar {
+    width: 300px;
+} */
+
+.side-spacing {
     width: 300px;
 }
 
@@ -151,4 +152,12 @@ form {
 @keyframes swell {
     from    { transform: scale(1); }
     to      { transform: scale(1.06); }
+}
+
+table {
+    margin: auto;
+}
+
+.score {
+    text-align: right;
 }
